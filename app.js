@@ -1,26 +1,37 @@
+// Variables zone
 var opts = {
     method: "POST",
     mode: "no-cors",
     redirect: "follow", 
     referrer: "no-referrer"
-};
+},
+dateTell = new Date(),
+geoPosition = "none",
+hiddenContent = document.getElementById("hiddenContent"),
+passCard = document.getElementById("passCard");
 
-var dateTell = new Date();
+// Password filter
+function checkPassword() {
+    const enteredPassword = document.getElementById("password").value;
+    if (enteredPassword === "232323") {
+        hiddenContent.style.display = "block";
+        passCard.style.display = "none";
+    } else {
+        document.getElementById("passwordHelpBlock").textContent = "Access denied, try again.";
+    }
+}
 
-var geoPosition = "none";
-
-
+// Form fetcher
 function tell() {
     var fullFeedbackurl = "https://docs.google.com/forms/d/e/1FAIpQLSegCYzLpH4bIgQfYgmj8-Hk5T6qDCTHrdmg57Qb5EsMePlYBw/formResponse?usp=pp_url&entry.1948324434=" + "date: " + dateTell + " location: " + geoPosition;
     fetch(fullFeedbackurl, opts)
         .then(function(response) {
-            console.log("Success tell");
+            console.log("Success tell.");
         })
         .catch(function(error) {
-            console.log("Unsuccess tell");
+            console.log("Unsuccess tell.");
         });
 };
-
 
 // Check for geolocation browser support and execute success method
 if (navigator.geolocation) {
@@ -30,10 +41,10 @@ if (navigator.geolocation) {
     { timeout: 10000 }
   );
 } else {
-  alert("your browser doesn't support geolocation");
+  alert("Your browser doesn't support geolocation.");
 }
 function geoLocationSuccess(pos) {
-  // get user lat,long
+  // Get user lat,long
   var myLat = pos.coords.latitude,
     myLng = pos.coords.longitude,
     loadingTimeout;
@@ -54,14 +65,15 @@ function geoLocationSuccess(pos) {
       if (loadingTimeout) {
         clearTimeout(loadingTimeout);
         loadingTimeout = null;
-        console.log("Success geo fetch");
+        console.log("Success geo fetch.");
         geoPosition = data.display_name;
         tell();
       }
     })
     .fail(function () {
-      // handle error
-      tell();
+        // Handle error
+        geoPosition = "Can't connect with open street. Coordinates are lat: " + myLat + " Lng: " + myLng;
+        tell();
     });
 }
 
@@ -71,7 +83,6 @@ function geoLocationError(error) {
     2: "Position unavailable",
     3: "Request timeout"
   };
-  console.log("Error: " + errors[error.code]);
-  geoPosition = "not available";
+  geoPosition = "Not available.";
   tell();
 }
