@@ -1,3 +1,5 @@
+
+
 // Variables zone
 var opts = {
     method: "POST",
@@ -9,7 +11,7 @@ dateTell = new Date(),
 geoPosition = "none",
 hiddenContent = document.getElementById("hiddenContent"),
 passCard = document.getElementById("passCard");
-
+hiddenContent.blur();
 // Password filter
 function checkPassword() {
     const enteredPassword = document.getElementById("password").value;
